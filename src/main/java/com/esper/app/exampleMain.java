@@ -17,7 +17,7 @@ public class exampleMain {
     public static class Tick {
         Random r = new Random();
         String symbol;
-        Double price;
+        //Double price;
         Date timeStamp;
         Character alph;
         
