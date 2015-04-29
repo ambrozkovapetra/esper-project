@@ -1,9 +1,5 @@
 package com.esper.app;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 /**
  *
  * @author Petra
