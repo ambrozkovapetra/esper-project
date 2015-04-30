@@ -61,7 +61,7 @@ public class exampleMain {
  
         EPAdministrator cepAdm = cep.getEPAdministrator();
         EPStatement cepStatement = cepAdm.createEPL("select sum(number) from " +
-                "StockTick.win:length(5)");
+                "StockTick.win:time(5)");
                 
         cepStatement.addListener(new CEPListener());
  
