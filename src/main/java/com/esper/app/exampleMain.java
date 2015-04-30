@@ -15,26 +15,26 @@ public class exampleMain {
  
     public static class Tick {
         Random r = new Random();
-        Character alph;
+        Double number;
  
-        public Tick(char a) {
-            alph = a;
+        public Tick(double n) {
+            number = n;
         }
         
-        public double getAplh() {return alph;}
+        public double getNumber() {return number;}
  
         @Override
         public String toString() {
-            return "Character " + alph.toString();
+            return "Number " + number.toString();
         }
     }
  
     private static Random generator = new Random();
  
     public static void GenerateRandomTick(EPRuntime cepRT) {
-        String alphabet = "abc";
-        char alph = (char) alphabet.charAt(generator.nextInt(alphabet.length()));
-        Tick tick = new Tick(alph);
+        double number = (double) generator.nextInt(10);
+        Tick tick = new Tick(number);
+        System.out.println("Sending tick:" + tick);
         cepRT.sendEvent(tick);
     }
  
@@ -60,8 +60,8 @@ public class exampleMain {
         EPRuntime cepRT = cep.getEPRuntime();
  
         EPAdministrator cepAdm = cep.getEPAdministrator();
-        EPStatement cepStatement = cepAdm.createEPL("select * from " +
-                "StockTick");
+        EPStatement cepStatement = cepAdm.createEPL("select sum(number) from " +
+                "StockTick.win:length(5)");
                 
         cepStatement.addListener(new CEPListener());
  
