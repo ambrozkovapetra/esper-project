@@ -47,7 +47,7 @@ public class exampleMain {
  
     public static void main(String[] args) {
         
-        //logování
+        //logovani
         SimpleLayout layout = new SimpleLayout();
         ConsoleAppender appender = new ConsoleAppender(new SimpleLayout());
         Logger.getRootLogger().addAppender(appender);
