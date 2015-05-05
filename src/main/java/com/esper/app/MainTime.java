@@ -1,12 +1,5 @@
 package com.esper.app;
 
-
-/**
- *
- * @author Petra
- */
-
-
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import com.espertech.esper.client.time.CurrentTimeSpanEvent;
@@ -73,7 +66,6 @@ public class MainTime {
         EPAdministrator cepAdm = cep.getEPAdministrator();
         EPStatement cepStatement = cepAdm.createEPL("select *" +
                 "from StockTick ");
- 
         cepStatement.addListener(new CEPListener());
  
        // We generate a few ticks...
