@@ -11,7 +11,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
-public class exampleMain {
+public class ExampleMain {
  
     public static class Tick {
         Random r = new Random();
