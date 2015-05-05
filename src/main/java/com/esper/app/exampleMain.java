@@ -11,29 +11,30 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
-public class exampleMain {
+public class ExampleMain {
  
     public static class Tick {
         Random r = new Random();
-        Double number;
+        Character letter;
  
-        public Tick(double n) {
-            number = n;
+        public Tick(char l) {
+            letter = l;
         }
         
-        public double getNumber() {return number;}
+        public Character getLetter() {return letter;}
  
         @Override
         public String toString() {
-            return "Number " + number.toString();
+            return "Character " + letter.toString();
         }
     }
  
     private static Random generator = new Random();
  
     public static void GenerateRandomTick(EPRuntime cepRT) {
-        double number = (double) generator.nextInt(10);
-        Tick tick = new Tick(number);
+        String alphabet = "abc";
+        char letter = (char) alphabet.charAt(generator.nextInt(alphabet.length()));
+        Tick tick = new Tick(letter);
         System.out.println("Sending tick:" + tick);
         cepRT.sendEvent(tick);
     }
@@ -41,7 +42,7 @@ public class exampleMain {
     public static class CEPListener implements UpdateListener {
  
         public void update(EventBean[] newData, EventBean[] oldData) {
-            System.out.println("Event: " + newData[0].getUnderlying());
+            System.out.println("Event received: " + newData[0].getUnderlying());
         }
     }
  
@@ -60,8 +61,8 @@ public class exampleMain {
         EPRuntime cepRT = cep.getEPRuntime();
  
         EPAdministrator cepAdm = cep.getEPAdministrator();
-        EPStatement cepStatement = cepAdm.createEPL("select sum(number) from " +
-                "StockTick.win:time(5)");
+        EPStatement cepStatement = cepAdm.createEPL("select letter as hereIsMyLetter from " +
+                "StockTick");
                 
         cepStatement.addListener(new CEPListener());
  
