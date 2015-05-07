@@ -4,45 +4,39 @@ package com.esper.app;
  *
  * @author Petra
  */
-
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import com.espertech.esper.client.*;
 import java.util.Random;
-import java.util.Date;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 
-public class NumbersAndTime {
+public class ExampleMain {
  
     public static class Tick {
-        Double number;
-        Date timeStamp;
+        Random r = new Random();
+        Character letter;
  
-        public Tick(double n, long t) {
-            number = n;
-            timeStamp = new Date(t);
+        public Tick(char l) {
+            letter = l;
         }
-        public double getNumber() {return number;}
-        public Date getTimeStamp() {return timeStamp;}
+        
+        public Character getLetter() {return letter;}
  
         @Override
         public String toString() {
-            return "Number: " + number.toString() + " time: " + timeStamp.toString();
+            return "Character " + letter.toString();
         }
     }
  
     private static Random generator = new Random();
  
     public static void GenerateRandomTick(EPRuntime cepRT) {
- 
-        double number = (double) generator.nextInt(10);
-        long timeStamp = System.nanoTime();//System.currentTimeMillis(); 
-        Tick tick = new Tick(number, timeStamp);
+        String alphabet = "abc";
+        char letter = (char) alphabet.charAt(generator.nextInt(alphabet.length()));
+        Tick tick = new Tick(letter);
         System.out.println("Sending tick:" + tick);
         cepRT.sendEvent(tick);
- 
     }
  
     public static class CEPListener implements UpdateListener {
@@ -53,25 +47,27 @@ public class NumbersAndTime {
     }
  
     public static void main(String[] args) {
- 
+        
+        //logovani
         SimpleLayout layout = new SimpleLayout();
         ConsoleAppender appender = new ConsoleAppender(new SimpleLayout());
         Logger.getRootLogger().addAppender(appender);
-        Logger.getRootLogger().setLevel((Level) Level.WARN);
-//The Configuration is meant only as an initialization-time object.
+        Logger.getRootLogger().setLevel((Level) Level.WARN);   
+        
+        //The Configuration is meant only as an initialization-time object.
         Configuration cepConfig = new Configuration();
         cepConfig.addEventType("StockTick", Tick.class.getName());
         EPServiceProvider cep = EPServiceProviderManager.getProvider("myCEPEngine", cepConfig);
         EPRuntime cepRT = cep.getEPRuntime();
  
         EPAdministrator cepAdm = cep.getEPAdministrator();
-        EPStatement cepStatement = cepAdm.createEPL("select count(number) from " +
-                "StockTick.win:firsttime(1000000) ");
- 
+        EPStatement cepStatement = cepAdm.createEPL("select letter as hereIsMyLetter from " +
+                "StockTick");
+                
         cepStatement.addListener(new CEPListener());
  
        // We generate a few ticks...
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             GenerateRandomTick(cepRT);
         }
     }

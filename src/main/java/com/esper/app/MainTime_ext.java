@@ -11,13 +11,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
-public class MainTime {
+public class MainTime_ext {
  
     public static class Tick {
         Double number;
-        Date timeStamp;
+        Long timeStamp;
  
-        public Tick(double n, Date t) {
+        public Tick(double n, long t) {
             number = n;
             timeStamp = t;
         }
@@ -25,7 +25,7 @@ public class MainTime {
         public double getNumber() {
             return number;
         }
-        public Date getTimeStamp() {
+        public long getTimeStamp() {
             return timeStamp;
         }
  
@@ -39,28 +39,19 @@ public class MainTime {
  
     public static void GenerateTicks(EPRuntime cepRT) throws ParseException {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH:mm:ss SSS");
-        Tick tick1 = new Tick(generator.nextInt(10),
-                format.parse("2015 01 01 00:00:00 000"));
-        Tick tick2 = new Tick(generator.nextInt(10), 
-                format.parse("2015 01 01 00:00:09 000"));
-        Tick tick3 = new Tick(generator.nextInt(10), 
-                format.parse("2015 01 01 00:00:12 000"));
-        Tick tick4 = new Tick(generator.nextInt(10), 
-                format.parse("2015 01 01 00:00:19 000"));  
+        Tick tick1 = new Tick(generator.nextInt(10), 0);
+        Tick tick2 = new Tick(generator.nextInt(10), 1000);
+        Tick tick3 = new Tick(generator.nextInt(10), 6000);
+        Tick tick4 = new Tick(generator.nextInt(10), 11000); 
         
-        //cepRT.sendEvent(new TimerControlEvent(TimerControlEvent.ClockType.CLOCK_EXTERNAL));
+//cepRT.sendEvent(new TimerControlEvent(TimerControlEvent.ClockType.CLOCK_EXTERNAL));
         
-        cepRT.sendEvent(new CurrentTimeEvent(tick1.getTimeStamp().getTime()));
         System.out.println("Sending tick:" + tick1);
         cepRT.sendEvent(tick1);
-        cepRT.sendEvent(new CurrentTimeEvent(tick2.getTimeStamp().getTime()));
         System.out.println("Sending tick:" + tick2);
         cepRT.sendEvent(tick2);
-        cepRT.sendEvent(new CurrentTimeEvent(tick3.getTimeStamp().getTime()));
         System.out.println("Sending tick:" + tick3);
         cepRT.sendEvent(tick3);
-        cepRT.sendEvent(new CurrentTimeEvent(tick4.getTimeStamp().getTime()));
         System.out.println("Sending tick:" + tick4);
         cepRT.sendEvent(tick4);
     }
@@ -89,7 +80,7 @@ public class MainTime {
  
         EPAdministrator cepAdm = cep.getEPAdministrator();
         EPStatement cepStatement = cepAdm.createEPL("select count(number) as countOfNumbers " +
-                "from StockTick.win:time(6 seconds) ");
+                "from StockTick.win:ext_timed(timeStamp, 5 seconds) ");
         cepStatement.addListener(new CEPListener());
         GenerateTicks(cepRT);
     }
